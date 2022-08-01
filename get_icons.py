@@ -13,9 +13,6 @@ import re
 
 # Where to save pics?
 path = "pics/[file].png"
-# File name format
-file_name = "[id]_[name]"
-
 
 # -----------------------------------------------------
 
@@ -57,9 +54,10 @@ if (sprite_sheet_url):
     img = Image.open(get(sprite_sheet_url, stream=True).raw)
     for a in items:
         pos = a.find("td", {"class": "row-icon"}).div["class"][1][6:]
-        desc = a.find("td", {"class": "row-desc"}).span.text
+        item_id = a.find("td", {"class": "row-desc"}
+                         ).find("span", {"class": "text-id"}).text.replace("(minecraft:", " ").replace(")", "").strip()
         [x, y] = positions[pos]
-        final = path.replace("[file]", file_name.replace(
-            "[id]", a.td.text.replace(":", "_")).replace("[name]", desc))
+        final = path.replace("[file]", item_id)
+        print(item_id)
         img.crop((x, y, x + 32, y + 32)).save(final)
         li[a.td.text] = 0
